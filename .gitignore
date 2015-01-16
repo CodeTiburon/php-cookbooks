@@ -1,6 +1,7 @@
 # Chef
 .chef
 .kitchen
+cookbooks/*/.kitchen/logs/*.log
 
 # Ruby
 .rake_test_cache
