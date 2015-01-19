@@ -8,6 +8,9 @@ provisioner:
 platforms:
   #- name: ubuntu-12.04
   - name: ubuntu-14.04
+    driver:
+      box:  ubuntu-14.04-chef-11
+      box_url: https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box
   #- name: centos-6.4
   #- name: centos-6.5
 

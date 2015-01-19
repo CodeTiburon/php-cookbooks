@@ -7,11 +7,8 @@
 
 if platform_family?('rhel')
   default['php-fpm']['package_name'] = value_for_platform(
-    "amazon"  => { ">= 2013.09" => "php55-fpm" },
-    "default" => "php55u-fpm"
+    'amazon'  => { '>= 2013.09' => 'php55-fpm' },
+    'default' => 'php55u-fpm'
   )
   default['php-fpm']['service_name'] = 'php-fpm'
 end
-
-
-

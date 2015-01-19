@@ -1,22 +1,22 @@
 server {
-  listen <%= @http_port %>;
-  access_log  <%= @customlog %>;
-<% if @ssl %>
-  listen <%= @https_port %>;
-  ssl on;
-  ssl_certificate <%= @ssl_cert %>;
+  listen <%= @http_port %>;  
+
+<% unless @https_port.empty? %>
+  listen <%= @https_port %> ssl;
+  ssl_certificate <%= @ssl_cert %>; #TODO: move certificate to common config
   ssl_certificate_key <%= @ssl_key %>;  
-<% else %>
-  
 <% end %>
 
   server_name  <%= @server_name %>;
   root <%= @docroot %>;
   autoindex off;
 
+  error_log  <%= @errorlog %>;
+  access_log  <%= @customlog %>;
+
   # Higher timeouts for when we need to reindex caches in the gui
-  send_timeout <%= node[:magento][:nginx][:send_timeout] %>;
-  proxy_read_timeout <%= node[:magento][:nginx][:proxy_read_timeout] %>;
+  send_timeout <%= @send_timeout %>;
+  proxy_read_timeout <%= @proxy_read_timeout %>;
 
   # protection (we have no .htaccess)
   location ~ (^/(app/|includes/|lib/|/pkginfo/|var/|report/config.xml)|/\.git/|/\.hg/|/\.svn/|/.hta.+) {
@@ -25,17 +25,17 @@ server {
 
   # handle all .php files, /downloader and /report
   location ~ (\.php|/downloader/?|/report/?)$ {
-    if ($request_uri ~ /(downloader|report)$){ # no trailing /, redirecting
+    if ($request_uri ~ /(downloader|report)$) { # no trailing /, redirecting
       rewrite  ^(.*)$ $1/ permanent;
     }
     fastcgi_index index.php;
     include /etc/nginx/fastcgi_params;
-    fastcgi_param MAGE_RUN_TYPE <%= node[:magento][:run_type] %>;
-    fastcgi_param MAGE_RUN_CODE $magesite;
+    fastcgi_param MAGE_RUN_TYPE <%= @run_type %>;
+    fastcgi_param MAGE_RUN_CODE <%= @run_code %>;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    <% if @ssl %>fastcgi_param HTTPS on;<% end %>
+    <% if unless @https_port.empty? %>fastcgi_param HTTPS on;<% end %>
     if (-e $request_filename) { # check if requested path exists
-      fastcgi_pass <%= node['php-fpm']['pools'].detect{|pool| pool[:name] == "magento"}[:listen] %>;
+      fastcgi_pass <%= @php_fpm_listen %>;
     }
   }
 
@@ -47,14 +47,14 @@ server {
     }
     # set fastcgi settings, not allowed in the "if" block
     include /etc/nginx/fastcgi_params;
-    fastcgi_param MAGE_RUN_TYPE <%= node[:magento][:run_type] %>;
-    fastcgi_param MAGE_RUN_CODE $magesite;
+    fastcgi_param MAGE_RUN_TYPE <%= @run_type %>;
+    fastcgi_param MAGE_RUN_CODE <%= @run_code %>;
     fastcgi_param SCRIPT_FILENAME $document_root/index.php;
     fastcgi_param SCRIPT_NAME /index.php;
     <% if @ssl %>fastcgi_param HTTPS on;<% end %>
     # rewrite - if file not found, pass it to the backend
     if (!-f $request_filename) {
-      fastcgi_pass <%= node['php-fpm']['pools'].detect{|pool| pool[:name] == "magento"}[:listen] %>;
+      fastcgi_pass <%= @php_fpm_listen %>;
       break;
     }
   }

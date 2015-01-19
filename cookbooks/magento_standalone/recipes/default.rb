@@ -13,9 +13,3 @@ include_recipe 'php::ini'
 
 # Set up webserver
 include_recipe "#{cookbook_name}::nginx"
-
-
-
-
-
-

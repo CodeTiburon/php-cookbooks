@@ -1,16 +1,18 @@
-name             'magento_standalone'
-maintainer       'CodeTiburon LLC'
+name 'magento_standalone'
+maintainer 'CodeTiburon LLC'
 maintainer_email 'contact@codetiburon.com'
-license          'Proprietary - All Rights Reserved'
-description      'Installs and configures magento CE.'
+license 'Proprietary - All Rights Reserved'
+description 'Installs and configures magento CE.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-supports         'ubuntu', ">= 12.04"
-supports         'centos', ">= 6.4"
-supports         'amazon', ">= 2013.09"
-version          '0.1.0'
+supports 'ubuntu', '>= 12.04'
+supports 'centos', '>= 6.4'
+supports 'amazon', '>= 2013.09'
+version '0.1.0'
 
 depends 'apt', '~> 2.6.1'
 depends 'yum', '~> 3.5.2'
+depends 'yum-epel'
+depends 'yum-ius'
 depends 'unattended-upgrades', '~> 0.1.2'
 depends 'build-essential', '~> 2.1.3'
 depends 'fail2ban', '~> 2.2.1'

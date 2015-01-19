@@ -1,0 +1,28 @@
+AllCops:
+  Include:
+    - '**Berksfile'
+    - '**Gemfile'
+    - '**Rakefile'
+    - '**Thorfile'
+    - '**Guardfile'
+  Exclude:
+    - 'vendor/**'
+
+ClassLength:
+  Enabled: false
+Documentation:
+  Enabled: false
+Encoding:
+  Enabled: false
+HashSyntax:
+  Enabled: true
+LineLength:
+  Enabled: false
+MethodLength:
+  Enabled: false
+SignalException:
+  Enabled: false
+TrailingComma:
+  Enabled: true
+WordArray:
+  Enabled: true

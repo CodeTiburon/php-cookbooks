@@ -2,7 +2,7 @@
 # Cookbook Name:: magento_standalone
 # Attributes:: php
 # Requires cookbook 'php', '~> 1.5.0'
-# 
+#
 # Copyright (C) 2015
 
 if node['platform_version'].to_f <= 14.04
@@ -11,12 +11,13 @@ else
   default['php']['ext_conf_dir']  = '/etc/php5/conf.d'
 end
 
-case node['platform_family'] 
+case node['platform_family']
 when 'rhel'
-  if node.['platform_version'].to_f == 2013.09 # amazon 2013.09 has php55 packages
+  # amazon 2013.09 has php55 packages
+  if node['platform_version'].to_f == 2013.09
     default['php']['packages'] = %w(
       php55
-      php55-devel 
+      php55-devel
       php55-mcrypt
       php55-mbstring
       php55-gd
@@ -26,7 +27,7 @@ when 'rhel'
       php55-mysqlnd
       php55-pdo
       php55-xml
-      )
+    )
   else
     default['php']['packages'] = %w(
       php55u
@@ -38,7 +39,8 @@ when 'rhel'
       php55u-pecl-memcache
       php55u-gmp
       php55u-mysqlnd
-      php55u-xml )
+      php55u-xml
+    )
   end
   default['php']['ext_conf_dir']  = '/etc/php.d'
 when 'debian'
@@ -53,5 +55,6 @@ when 'debian'
     php5-gmp
     php5-mysqlnd
     php5-curl
-    php-pear )
+    php-pear
+  )
 end

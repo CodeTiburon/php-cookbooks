@@ -8,10 +8,7 @@
 default['nginx']['default_site_enabled'] = false
 
 # needs setting because by default it is set to runit
-if platform?('ubuntu')
-  set['nginx']['init_style'] = 'upstart'
-end
+set['nginx']['init_style'] = 'upstart' if platform?('ubuntu')
 
 default['nginx']['listen_ports'] = %w(80)
-
 default['nginx']['default_root'] = '/var/www'
