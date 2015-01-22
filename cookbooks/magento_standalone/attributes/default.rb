@@ -6,7 +6,7 @@
 # Copyright (C) 2015
 
 php_appstack = 'magento'
-default[php_appstack] = 'magento'
+default['php_appstack'] = 'magento'
 
 default[php_appstack] = {
   version: '1.9.0.1',

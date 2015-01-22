@@ -6,12 +6,18 @@
 
 php_appstack = node.default['php_appstack']
 
-return 0 unless node.default[php_appstack]['webserver_deployment']['enabled']
-
 include_recipe 'chef-sugar'
 
 # Pid is different on Ubuntu 14, causing nginx service to fail https://github.com/miketheman/nginx/issues/248
 node.default['nginx']['pid'] = '/run/nginx.pid' if ubuntu_trusty?
+
+# Create document_root if not exists
+directory node.default['nginx']['default_root'] do
+  owner node.default['nginx']['user']
+  group node.default['nginx']['group']
+  mode "0755"
+  action :create
+end
 
 # Install Nginx
 include_recipe 'nginx'

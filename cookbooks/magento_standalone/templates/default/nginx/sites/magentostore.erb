@@ -33,7 +33,7 @@ server {
     fastcgi_param MAGE_RUN_TYPE <%= @run_type %>;
     fastcgi_param MAGE_RUN_CODE <%= @run_code %>;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    <% if unless @https_port.empty? %>fastcgi_param HTTPS on;<% end %>
+    <% unless @https_port.empty? %>fastcgi_param HTTPS on;<% end %>
     if (-e $request_filename) { # check if requested path exists
       fastcgi_pass <%= @php_fpm_listen %>;
     }

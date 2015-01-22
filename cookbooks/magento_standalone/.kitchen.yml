@@ -18,4 +18,5 @@ suites:
   - name: default
     run_list:
      - recipe[magento_standalone::default]
+     - recipe[magento_standalone::export-node]
     attributes:
