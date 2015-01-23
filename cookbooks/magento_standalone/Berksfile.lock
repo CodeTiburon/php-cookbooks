@@ -2,6 +2,8 @@ DEPENDENCIES
   magento_standalone
     path: .
     metadata: true
+  test-helper
+    path: ../test-helper
 
 GRAPH
   apache2 (3.0.0)
@@ -87,6 +89,7 @@ GRAPH
   smf (2.2.1)
     rbac (>= 1.0.1)
     resource-control (>= 0.0.0)
+  test-helper (0.1.0)
   unattended-upgrades (0.1.2)
     apt (>= 0.0.0)
   vim (1.1.2)

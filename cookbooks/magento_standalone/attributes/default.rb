@@ -14,7 +14,9 @@ default[php_appstack] = {
   deploy_key: '/root/.ssh/id_rsa',
   inst_sources: 'repository',  # repository, composer
   sample_data_url: '',
-  webserver: 'nginx' # or apache
+  webserver: 'nginx', # or apache
+  cert_name: 'ssl_cert',
+  cert_domain: node['fqdn']
 }
 
 log_dir = node[default[php_appstack]['webserver']]['log_dir']
@@ -66,5 +68,9 @@ default[php_appstack]['varnish']['backend_nodes'] = {}
 default[php_appstack]['webserver_deployment']['enabled'] = true
 default[php_appstack]['app_deployment']['enabled'] = true
 default[php_appstack]['varnish']['multi'] = true
+
+ssl_cert: File.join(node[:nginx][:dir], 'ssl',
+                          node[:magento][:cert_name]),
+      ssl_key: File.join(node[:nginx][:dir], 'ssl', node[:magento][:cert_name])
 
 =end

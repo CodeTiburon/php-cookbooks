@@ -1,4 +1,4 @@
-require 'spec_helper'
+#require 'spec_helper'
 
 #describe package('httpd'), :if => os[:family] == 'redhat' do
 #  it { should be_installed }
@@ -25,4 +25,4 @@ require 'spec_helper'
 
 #describe port(80) do
 #  it { should be_listening }
-#end
+#\end

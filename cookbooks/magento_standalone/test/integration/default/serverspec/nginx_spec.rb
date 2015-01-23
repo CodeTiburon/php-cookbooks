@@ -9,6 +9,6 @@ describe port(80) do
   it { should be_listening }
 end
 
-describe command('sudo service nginx reload') do
-  its(:exit_status) { should eq 0 }
+describe command('nginx -t') do
+  its(:stdout) { should_not match /test failed/ }
 end

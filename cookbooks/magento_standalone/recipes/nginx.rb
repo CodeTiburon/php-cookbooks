@@ -35,6 +35,10 @@ end
 # Rackspace cookbook is much better than Opscode iptables
 include_recipe 'rackspace_iptables'
 
+Helper.create_ssl_cert(File.join(node['nginx']['dir'], 'ssl'),
+                        node[php_appstack]['domain'], 
+                        node[php_appstack]['cert_name'])
+
 listen_ports = []
 # Create the sites.
 node.default[php_appstack]['sites'].each do |site_name, site_opts|
@@ -59,7 +63,9 @@ node.default[php_appstack]['sites'].each do |site_name, site_opts|
       run_code: site_opts['run_code'],
       send_timeout: site_opts['send_timeout'],
       proxy_read_timeout: site_opts['proxy_read_timeout'],
-      php_fpm_listen: node.default['php-fpm']['pools']['www']['listen']
+      php_fpm_listen: node.default['php-fpm']['pools']['www']['listen'],
+      ssl_cert: File.join(node['nginx']['dir'], 'ssl', node[php_appstack]['cert_name']),
+      ssl_key: File.join(node['nginx']['dir'], 'ssl', node[php_appstack]['cert_name'])
     )
     notifies :reload, 'service[nginx]'
   end
