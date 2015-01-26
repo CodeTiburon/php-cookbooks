@@ -10,9 +10,9 @@ default['php_appstack'] = 'magento'
 
 default[php_appstack] = {
   version: '1.9.0.1',
-  repository: 'https://github.com/codetiburon/magento',
+  repository: 'https://github.com/OpenMage/magento-mirror',
   deploy_key: '/root/.ssh/id_rsa',
-  inst_sources: 'repository',  # repository, composer
+  inst_sources: 'repository',  # repository, archive
   sample_data_url: '',
   webserver: 'nginx', # or apache
   cert_name: 'ssl_cert',
@@ -61,16 +61,13 @@ default['php-fpm']['pools'] = {
   }
 }
 
+default[php_appstack]['mysql']['databases'] = {}
+
 =begin
 
-default[php_appstack]['mysql']['databases'] = {}
 default[php_appstack]['varnish']['backend_nodes'] = {}
 default[php_appstack]['webserver_deployment']['enabled'] = true
 default[php_appstack]['app_deployment']['enabled'] = true
 default[php_appstack]['varnish']['multi'] = true
-
-ssl_cert: File.join(node[:nginx][:dir], 'ssl',
-                          node[:magento][:cert_name]),
-      ssl_key: File.join(node[:nginx][:dir], 'ssl', node[:magento][:cert_name])
 
 =end

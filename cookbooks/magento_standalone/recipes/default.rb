@@ -7,6 +7,9 @@
 # Set up server
 include_recipe "#{cookbook_name}::baseserver"
 
+# Set up MySQL
+include_recipe "#{cookbook_name}::mysql-base"
+
 # Set up php & php-fpm
 include_recipe 'php'
 include_recipe 'php::ini'
