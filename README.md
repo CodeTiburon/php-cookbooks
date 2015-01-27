@@ -1,26 +1,113 @@
 php-coookbooks
 ===============
-This is a place where cookbooks, roles, environments, data bags, and chef-repo configuration files are stored and managed.
 
-Knife Configuration
+Overview
 -------------------
-Knife is the [command line interface](https://docs.chef.io/knife.html) for Chef. The chef-repo contains a .chef directory (which is a hidden directory by default) in which the Knife configuration file (knife.rb) is located. This file contains configuration settings for the chef-repo.
 
-The knife.rb file is automatically created by the starter kit. This file can be customized to support configuration settings used by [cloud provider options](https://docs.chef.io/plugin_knife.html) and custom [knife plugins](https://docs.chef.io/plugin_knife_custom.html).
+*Chef* is a systems and cloud infrastructure automation framework that makes it easy to deploy servers and applications to any physical, virtual, or cloud location, no matter the size of the infrastructure. Each organization is comprised of one (or more) workstations, a single server, and every node that will be configured and maintained by the chef-client. Cookbooks (and recipes) are used to tell the chef-client how each node in your organization should be configured. The chef-client (which is installed on every node) does the actual configuration.
 
-Also located inside the .chef directory are .pem files, which contain private keys used to authenticate requests made to the Chef server. The USERNAME.pem file contains a private key unique to the user (and should never be shared with anyone). The ORGANIZATION-validator.pem file contains a private key that is global to the entire organization (and is used by all nodes and workstations that send requests to the Chef server).
+[What is Chef](https://www.chef.io/chef/)
 
-More information about knife.rb configuration options can be found in [the documentation for knife](https://docs.chef.io/config_rb_knife.html).
+This repository is a place where cookbooks, roles, environments, data bags, and chef-repo configuration files are stored and managed.
 
-Cookbooks
----------
-A cookbook is the fundamental unit of configuration and policy distribution. A sample cookbook can be found in `cookbooks/starter`. After making changes to any cookbook, you must upload it to the Chef server using knife:
+Introduction
+-------------------
 
-    $ knife upload cookbooks/starter
+Exists two types of Chef: Chef Solo and Chef Server. In order to just configure single server you need to use Chef Solo.
 
-For more information about cookbooks, see the example files in the `starter` cookbook.
+This is list of terminology, which is used in this doc:
 
-Roles
------
-Roles provide logical grouping of cookbooks and other roles. A sample role can be found at `roles/starter.rb`.
+ - *Node* - A host where the Chef client will run (web server, database server or another server). Chef Client always working on server, which it configure. [Read more](http://docs.chef.io/nodes.html)
+ - *Chef Client* - a command line tool that configures servers.
+ - *Chef Solo* - a version of the chef-client that allows using cookbooks with nodes without requiring access to a Chef server.
+ - *Berkshelf* - a tool to manage a cpplication's cookbook dependencies.
+ - *Recipes* - a single file of Ruby code that contains description of a node configuration (nginx ssl module, apache php module).
+ - *Cookbook* - a collection of Chef recipes (nginx cookbook, php cookbook).
+ - *Run list* - an ordered list of roles and/or recipes that are run in an exact order on node.
+ - *Role* - reusable configuration for multiple nodes (web role, database role, etc). [Read more](http://docs.chef.io/client/roles.html)
+ - *Resources* - a node's resources include files, directories, users and services.
+ - *Attribute* - variables that are passed through Chef and used in recipes and templates (the version number of nginx to install).
+ - *Template* - a file with placeholders for attributes, used to create configuration files (simple Erb file).
 
+
+## Chef Solo
+
+[Read more about Chef Solo](https://docs.chef.io/chef_solo.html)
+
+
+Server configuration with Chef Solo 
+-------------------
+
+## Pre-installation steps
+
+First of all you need to update package manager on server and install Git.
+
+For Ubuntu:
+
+```
+# sudo apt-get update
+# sudo apt-get install git
+```
+
+For CentOS, Amazon, Red Hat:
+
+```
+# sudo yum install git
+```
+
+## Installation of Chef Client
+
+ - Type this command to download and run the client installation script from the Chef website:
+
+  ```
+  # curl -L https://www.opscode.com/chef/install.sh | sudo bash
+  ```
+ - Confirm Chef has successfully installed.
+
+ ```
+ # sudo chef-solo -v
+ ...
+ Chef: 12.0.3
+ ```
+ Of course, your version number may be different.
+
+ - Chef will be installed to /opt/chef/. Chef bundled with different tools such as ruby, Berkshelf, knife, etc. In order to use it you should add `/opt/chef/embedded/bin` to PATH.
+
+ ```
+ echo 'export PATH="/opt/chef/embedded/bin:$PATH"' >> ~/.bash_profile && source ~/.bash_profile
+ ```
+ - Confirm that the Chef's gem and ruby are used by default
+ ```
+ # which gem
+ /opt/chef/embedded/bin/gem
+ ```
+ - Our cookbooks depend on opensource cookbooks which are written by Chef and community. Berkshelf can resolve all dependencies and download cookbooks to local server. That's why it's necessary to install Berkshelf first.
+ ```
+ gem install berkshelf
+ ```
+
+## Downloading cookbooks
+
+It's simple.
+
+```
+# cd ~
+# git clone https://github.com/CodeTiburon/php-cookbooks/
+```
+
+Also, you can upload archive to server from your local computer.
+
+We downloaded all cookbooks from git repo to target server but since chef solo runs locally and requires that a cookbook (and any of its dependencies) be on the same physical disk as the node we need to resolve and download all dependencies.
+```
+# cd php-cookbooks/cookbooks/magento_standalone
+# berks install
+```
+Berkshelf stores every version of a cookbook that you have ever installed into `~/.berkshelf/cookbooks/`
+
+## Run recipes to cook a server
+
+```
+chef-solo -c solo.rb -j nodes/magento.json
+```
+
+If you need to use only specific recipes you can edit `nodes/magento.json`
