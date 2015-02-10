@@ -9,10 +9,10 @@ php_appstack = 'magento'
 default['php_appstack'] = 'magento'
 
 default[php_appstack] = {
-  version: '1.9.0.1',
+  version: '1.9.1.0',
   repository: 'https://github.com/OpenMage/magento-mirror',
   deploy_key: '/root/.ssh/id_rsa',
-  inst_sources: 'repository',  # repository, archive
+  source: 'git',  # git, url
   sample_data_url: '',
   webserver: 'nginx', # or apache
   cert_name: 'ssl_cert',
@@ -35,12 +35,14 @@ default[php_appstack]['sites'][site1] = {
   proxy_read_timeout: 60,
   send_timeout: 60,
   server_admin: "admin@#{site1}",
-  revision: "v#{default[php_appstack]['version']}",
-  repository: default[php_appstack]['repository'],
+  revision: "#{default[php_appstack]['version']}",
+  source: 'git',
+  url: default[php_appstack]['repository'],
   deploy_key: default[php_appstack]['deploy_key'],
   run_type: 'store',
   run_code: 'default',
-  session: { save: 'file' }
+  session: { save: 'file' },
+  databases: { "#{site1}": { 'user': 'admin', 'pass': 'pass' } }
 }
 
 default['php-fpm']['pools'] = {

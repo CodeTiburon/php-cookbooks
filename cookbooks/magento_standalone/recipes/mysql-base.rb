@@ -33,11 +33,9 @@ service_name = 'default'
 
 # Install MySQL server
 mysql_service service_name do
-  mysql_user 'root'
   port '3306'
   bind_address '127.0.0.1'
-  version '5.7'
-  mysql_password mysql_root_password
+  initial_root_password  mysql_root_password
   action [:create, :start]
 end
 

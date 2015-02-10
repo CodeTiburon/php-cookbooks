@@ -15,7 +15,7 @@ node.default['nginx']['pid'] = '/run/nginx.pid' if ubuntu_trusty?
 directory node.default['nginx']['default_root'] do
   owner node.default['nginx']['user']
   group node.default['nginx']['group']
-  mode "0755"
+  mode '0755'
   action :create
 end
 
